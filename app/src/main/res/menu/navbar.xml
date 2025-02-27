@@ -6,9 +6,9 @@
         android:title="Home"/>
 
     <item
-        android:id="@+id/navCalender"
-        android:icon="@drawable/baseline_calendar_month_24"
-        android:title="Calender"/>
+        android:id="@+id/navAddTask"
+        android:icon="@drawable/baseline_add_24"
+        android:title="Add"/>
 
     <item
         android:id="@+id/navProfile"

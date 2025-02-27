@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+
+    tools:context=".ui.fragment.AddTaskFragment">
+
+    <EditText
+        android:id="@+id/editTextTitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Enter Task Title"
+        android:padding="12dp"
+        android:background="@android:drawable/editbox_background"
+        android:textSize="20dp"/>
+
+    <!-- Date Picker Input Field -->
+    <EditText
+        android:id="@+id/editTextDate"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Select Date"
+        android:focusable="false"
+        android:padding="12dp"
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/editbox_background"
+        android:textSize="20dp"
+        android:drawableEnd="@drawable/baseline_calendar_month_24"/>
+
+    <!-- Add Button -->
+    <Button
+        android:id="@+id/btnAddTask"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Task"
+        android:layout_marginTop="16dp"
+        android:backgroundTint="@color/todo_blue"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>

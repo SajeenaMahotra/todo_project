@@ -10,7 +10,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
 import com.example.project_todo.R
 import com.example.project_todo.databinding.ActivityNavigationBinding
-import com.example.project_todo.ui.fragment.CalenderFragment
+import com.example.project_todo.ui.fragment.AddTaskFragment
 import com.example.project_todo.ui.fragment.HomeFragment
 import com.example.project_todo.ui.fragment.ProfileFragment
 
@@ -36,7 +36,7 @@ class NavigationActivity : AppCompatActivity() {
         binding.bottomNavBar.setOnItemSelectedListener { menu ->
             when(menu.itemId){
                 R.id.navHome -> replaceFragment(HomeFragment())
-                    R.id.navCalender -> replaceFragment(CalenderFragment())
+                    R.id.navAddTask -> replaceFragment(AddTaskFragment())
                         R.id.navProfile -> replaceFragment(ProfileFragment())
                             else ->{}
             }
@@ -50,4 +50,5 @@ class NavigationActivity : AppCompatActivity() {
             insets
         }
     }
+
 }
