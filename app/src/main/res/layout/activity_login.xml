@@ -50,7 +50,7 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
+        android:id="@+id/PawwordInputLayout"
         android:layout_width="350dp"
         android:layout_height="60dp"
         android:layout_marginStart="35dp"
@@ -62,6 +62,7 @@
         app:layout_constraintTop_toBottomOf="@+id/layoutEmail">
 
         <com.google.android.material.textfield.TextInputEditText
+            android:id="@+id/inputPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password" />
@@ -79,7 +80,7 @@
         android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textInputLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/PawwordInputLayout" />
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/loginButton"
