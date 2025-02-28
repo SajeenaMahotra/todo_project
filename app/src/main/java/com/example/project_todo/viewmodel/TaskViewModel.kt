@@ -1,5 +1,6 @@
 package com.example.project_todo.viewmodel
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.project_todo.model.TaskModel
@@ -7,8 +8,8 @@ import com.example.project_todo.repository.TaskRepository
 
 class TaskViewModel(private val repo: TaskRepository) : ViewModel() {
 
-    val tasks = MutableLiveData<TaskModel>()
-    val getAllTasks = MutableLiveData<List<TaskModel>>()
+    private val _tasks = MutableLiveData<List<TaskModel>>()  // ✅ Correct type
+    val tasks: LiveData<List<TaskModel>> get() = _tasks
 
     fun addTask(taskModel: TaskModel, callback: (Boolean, String) -> Unit) {
         repo.addTask(taskModel) { success, message ->
@@ -28,22 +29,30 @@ class TaskViewModel(private val repo: TaskRepository) : ViewModel() {
         repo.deleteTask(taskId, callback)
     }
 
-    fun getTaskById(taskId: String, callback: (TaskModel?, Boolean, String) -> Unit) {
+    fun getTaskById(taskId: String,callback: (TaskModel?, Boolean,String) -> Unit){
         repo.getTaskById(taskId) { task, success, message ->
             if (success) {
-                tasks.value = task
+                callback(task, true, "Task fetched successfully")
+            } else {
+                callback(null, false, message)
             }
-            callback(task, success, message)
         }
     }
 
-    fun getAllTasks(callback: (List<TaskModel>?, Boolean, String) -> Unit = { _, _, _ -> }) {
-        repo.getAllTasks { taskList, success, message ->
+    fun getAllTasks(userId: String, callback: (List<TaskModel>?,Boolean,String) -> Unit){
+        repo.getAllTasks(userId) { taskList, success, message ->
             if (success) {
-                getAllTasks.value = taskList
+                _tasks.value = taskList
             }
             callback(taskList, success, message)
         }
+
     }
+
+
+
+
+
+
 
 }

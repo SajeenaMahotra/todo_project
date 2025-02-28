@@ -5,10 +5,12 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.project_todo.R
 import com.example.project_todo.model.TaskModel
+import com.example.project_todo.ui.activity.UpdateTaskActivity
 
 class TaskAdapter(
     var context: Context,
@@ -17,7 +19,8 @@ class TaskAdapter(
 
     class TaskViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val taskTitle: TextView = itemView.findViewById(R.id.taskTitle)
-        val taskDueDate: TextView = itemView.findViewById(R.id.taskDate)
+        val taskDate: TextView = itemView.findViewById(R.id.taskDate)
+        val editTask: ImageView = itemView.findViewById(R.id.editTask)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): TaskViewHolder {
@@ -32,8 +35,13 @@ class TaskAdapter(
 
     override fun onBindViewHolder(holder: TaskViewHolder, position: Int) {
         holder.taskTitle.text = data[position].taskName
-        holder.taskDueDate.text = data[position].date
+        holder.taskDate.text = data[position].date
 
+        holder.editTask.setOnClickListener {
+            val intent = Intent(holder.itemView.context, UpdateTaskActivity::class.java)
+            intent.putExtra("tasks", data[position].taskId)
+            holder.itemView.context.startActivity(intent)
+        }
 
     }
 

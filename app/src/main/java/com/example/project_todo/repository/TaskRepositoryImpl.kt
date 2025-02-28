@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
+
 class TaskRepositoryImpl:TaskRepository {
 
     val database:FirebaseDatabase=FirebaseDatabase.getInstance()
@@ -15,20 +16,19 @@ class TaskRepositoryImpl:TaskRepository {
     override fun addTask(taskModel: TaskModel, callback: (Boolean, String) -> Unit) {
         val id = ref.push().key.toString()
         taskModel.taskId = id
+        if (taskModel.userId.isNullOrEmpty()) {
+            callback(false, "User ID is missing")
+            return
+        }
+        taskModel.taskId = id  // Set task ID
         ref.child(id).setValue(taskModel).addOnCompleteListener {
-            if (it.isSuccessful) {
-                callback(true, "Task added successfully")
-            } else {
-                callback(false, it.exception?.message ?: "Error adding task")
-            }
+            callback(it.isSuccessful, if (it.isSuccessful) "Task added successfully" else "Error adding task")
+
         }
 
     }
 
-    override fun updateTask(
-        taskId: String,
-        data: MutableMap<String, Any>,
-        callback: (Boolean, String) -> Unit
+    override fun updateTask( taskId: String, data: MutableMap<String, Any>, callback: (Boolean, String) -> Unit
     ) {
         ref.child(taskId).updateChildren(data).addOnCompleteListener {
             if (it.isSuccessful) {
@@ -67,27 +67,28 @@ class TaskRepositoryImpl:TaskRepository {
 
     }
 
-    override fun getAllTasks(callback: (List<TaskModel>?, Boolean, String) -> Unit) {
-
-        ref.addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                if (snapshot.exists()){
-                    var products = mutableListOf<TaskModel>()
-                    for (eachData in snapshot.children){
-                        var model = eachData.getValue(TaskModel::class.java)
-                        if (model !=null){
-                            products.add(model)
+    override fun getAllTasks(
+        userId: String,
+        callback: (List<TaskModel>?, Boolean, String) -> Unit
+    ) {
+        ref.orderByChild("userId").equalTo(userId) // Filters tasks based on userId
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val tasks = mutableListOf<TaskModel>()
+                    for (eachData in snapshot.children) {
+                        val model = eachData.getValue(TaskModel::class.java)
+                        if (model != null) {
+                            tasks.add(model)
                         }
                     }
-                    callback(products,true,"Product fetched")
+                    callback(tasks, true, "Tasks fetched successfully")
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                callback(null,false,error.message)
-            }
-
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    callback(null, false, error.message)
+                }
+            })
     }
+
 
 }

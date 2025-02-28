@@ -1,6 +1,7 @@
 package com.example.project_todo.repository
 
 import com.example.project_todo.model.TaskModel
+import com.google.android.gms.tasks.Task
 
 interface TaskRepository {
     fun addTask(taskModel: TaskModel,callback:(Boolean,String)->Unit)
@@ -11,5 +12,5 @@ interface TaskRepository {
 
     fun getTaskById(taskId: String,callback: (TaskModel?, Boolean,String) -> Unit)
 
-    fun getAllTasks(callback: (List<TaskModel>?,Boolean,String) -> Unit)
+    fun getAllTasks(userId: String, callback: (List<TaskModel>?,Boolean,String) -> Unit)
 }

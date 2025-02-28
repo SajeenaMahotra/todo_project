@@ -17,6 +17,7 @@ import com.example.project_todo.repository.TaskRepositoryImpl
 import com.example.project_todo.repository.UserRepositoryImpl
 import com.example.project_todo.viewmodel.TaskViewModel
 import com.example.project_todo.viewmodel.UserViewModel
+import com.google.firebase.auth.FirebaseAuth
 
 
 class HomeFragment : Fragment() {
@@ -24,6 +25,7 @@ class HomeFragment : Fragment() {
     lateinit var userViewModel: UserViewModel
     lateinit var taskViewModel: TaskViewModel
     lateinit var adapter: TaskAdapter
+    private var userId: String? = null
 
 
 
@@ -49,9 +51,23 @@ class HomeFragment : Fragment() {
         binding.recyclerViewTasks.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewTasks.adapter = adapter
 
+        // Get the logged-in user ID
+        userId = FirebaseAuth.getInstance().currentUser?.uid
+
+        userId?.let { uid ->
+            taskViewModel.getAllTasks(uid) { taskList, success, message ->
+                if (success) {
+                    adapter.updateData(taskList ?: emptyList()) // Update RecyclerView
+                } else {
+                    Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
+                }
+            }
+        }
+
         var currentUser = userViewModel.getCurrentUser()
         currentUser.let {
             userViewModel.getUserFromDatabase(it?.uid.toString())
+
         }
 
         userViewModel.userData.observe(requireActivity()){
@@ -59,13 +75,9 @@ class HomeFragment : Fragment() {
         }
 
         // Observe tasks and update UI
-        taskViewModel.getAllTasks.observe(viewLifecycleOwner) { taskList ->
-            taskList?.let {
-                adapter.updateData(it)
-            }
+        taskViewModel.tasks.observe(viewLifecycleOwner) { taskList ->
+            adapter.updateData(taskList)
         }
-
-        taskViewModel.getAllTasks()
 
         // Enable swipe to delete tasks
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
@@ -74,7 +86,7 @@ class HomeFragment : Fragment() {
                 viewHolder: RecyclerView.ViewHolder,
                 target: RecyclerView.ViewHolder
             ): Boolean {
-                return false // Fix: Must return a boolean
+                return false
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
@@ -89,7 +101,9 @@ class HomeFragment : Fragment() {
             }
         }).attachToRecyclerView(binding.recyclerViewTasks)
 
+
     }
+
 
 
 }

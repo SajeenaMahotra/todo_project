@@ -26,7 +26,6 @@ class UserViewModel(val repo:UserRepository) {
     fun getCurrentUser(): FirebaseUser?{
         return repo.getCurrentUser()
     }
-
     var _userData= MutableLiveData<UserModel?>()
     var userData = MutableLiveData<UserModel?>()
         get()=_userData

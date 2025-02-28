@@ -13,12 +13,14 @@ import com.example.project_todo.model.TaskModel
 import com.example.project_todo.repository.TaskRepositoryImpl
 
 import com.example.project_todo.viewmodel.TaskViewModel
+import com.google.firebase.auth.FirebaseAuth
 import java.util.Calendar
 
 
 class AddTaskFragment : Fragment() {
     lateinit var binding:FragmentAddTaskBinding
     lateinit var taskViewModel: TaskViewModel
+    private var userId: String? = null
 
 
     override fun onCreateView(
@@ -35,6 +37,9 @@ class AddTaskFragment : Fragment() {
         val repo= TaskRepositoryImpl()
         taskViewModel=TaskViewModel(repo)
 
+        userId = FirebaseAuth.getInstance().currentUser?.uid
+
+
 
         binding.btnAddTask.setOnClickListener {
             addTask()
@@ -44,6 +49,10 @@ class AddTaskFragment : Fragment() {
             showDatePicker()
         }
     }
+
+
+
+
 
     private fun addTask() {
         val title = binding.editTextTitle.text.toString().trim()
@@ -55,13 +64,16 @@ class AddTaskFragment : Fragment() {
             return
         }
 
-        val model = TaskModel("", title, date)
+        if (userId == null) {
+            Toast.makeText(requireContext(), "User not logged in", Toast.LENGTH_SHORT).show()
+            return
+        }
+        val model = TaskModel("", title, date, userId!!)
 
         taskViewModel.addTask(model) { success, message ->
             if (success) {
                 Toast.makeText(requireContext(), "Task added successfully!", Toast.LENGTH_LONG).show()
 
-                // Clear input fields after successful task addition
                 binding.editTextTitle.text.clear()
                 binding.editTextDate.text.clear()
             } else {
