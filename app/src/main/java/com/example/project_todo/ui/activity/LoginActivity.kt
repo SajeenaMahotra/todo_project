@@ -34,6 +34,14 @@ class LoginActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        binding.textforgotpassword.setOnClickListener {
+            val intent = Intent(
+                this@LoginActivity,
+                ForgotPasswordActivity::class.java
+            )
+            startActivity(intent)
+        }
+
         binding.loginButton.setOnClickListener {
             val email:String = binding.inputEmail.text.toString()
             val password :String = binding.inputPassword.text.toString()
