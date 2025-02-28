@@ -1,5 +1,6 @@
 package com.example.project_todo.ui.fragment
 
+import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -74,12 +75,12 @@ class HomeFragment : Fragment() {
             binding.fullNameDisplay.text = it?.fullName.toString()
         }
 
-        // Observe tasks and update UI
+
         taskViewModel.tasks.observe(viewLifecycleOwner) { taskList ->
             adapter.updateData(taskList)
         }
 
-        // Enable swipe to delete tasks
+
         ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
             override fun onMove(
                 recyclerView: RecyclerView,
@@ -91,13 +92,25 @@ class HomeFragment : Fragment() {
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                 val taskId = adapter.getTaskId(viewHolder.adapterPosition)
-                taskViewModel.deleteTask(taskId) { success, message ->
-                    if (success) {
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                // Show confirmation dialog
+                AlertDialog.Builder(requireContext())
+                    .setTitle("Delete Task")
+                    .setMessage("Are you sure you want to delete this task?")
+                    .setPositiveButton("Delete") { _, _ ->
+                        taskViewModel.deleteTask(taskId) { success, message ->
+                            if (success) {
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                            } else {
+                                Toast.makeText(requireContext(), message, Toast.LENGTH_LONG).show()
+                            }
+                        }
                     }
-                }
+                    .setNegativeButton("Cancel") { dialog, _ ->
+                        dialog.dismiss()
+                        adapter.notifyItemChanged(viewHolder.adapterPosition) // Restore item if canceled
+                    }
+                    .setCancelable(false)
+                    .show()
             }
         }).attachToRecyclerView(binding.recyclerViewTasks)
 

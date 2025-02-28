@@ -1,5 +1,6 @@
 package com.example.project_todo.ui.activity
 
+import android.app.DatePickerDialog
 import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
@@ -12,6 +13,7 @@ import com.example.project_todo.databinding.ActivityUpdateTaskBinding
 import com.example.project_todo.repository.TaskRepositoryImpl
 import com.example.project_todo.ui.fragment.HomeFragment
 import com.example.project_todo.viewmodel.TaskViewModel
+import java.util.Calendar
 
 class UpdateTaskActivity : AppCompatActivity() {
     lateinit var binding: ActivityUpdateTaskBinding
@@ -39,9 +41,19 @@ class UpdateTaskActivity : AppCompatActivity() {
             }
         }
 
+        binding.updateDate.setOnClickListener {
+            showDatePicker()
+        }
+
         binding.btnUpdateTask.setOnClickListener {
             var title =binding.updateTitle.text.toString()
             var date =binding.updateDate.text.toString()
+
+            if (title.isEmpty() || date.isEmpty()) {
+                Toast.makeText(this@UpdateTaskActivity, "Please enter all fields", Toast.LENGTH_SHORT).show()
+                return@setOnClickListener
+            }
+
 
             var updatedData=mutableMapOf<String,Any>()
 
@@ -70,5 +82,24 @@ class UpdateTaskActivity : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+    }
+
+    private fun showDatePicker() {
+        val calendar = Calendar.getInstance()
+        val year = calendar.get(Calendar.YEAR)
+        val month = calendar.get(Calendar.MONTH)
+        val day = calendar.get(Calendar.DAY_OF_MONTH)
+
+        val datePickerDialog = DatePickerDialog(
+            this, // Use 'this' instead of requireContext() in an Activity
+            { _, selectedYear, selectedMonth, selectedDay ->
+                val selectedDate = "$selectedYear-${selectedMonth + 1}-$selectedDay"
+                binding.updateDate.setText(selectedDate)
+            },
+            year,
+            month,
+            day
+        )
+        datePickerDialog.show()
     }
 }
