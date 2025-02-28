@@ -13,4 +13,6 @@ interface TaskRepository {
     fun getTaskById(taskId: String,callback: (TaskModel?, Boolean,String) -> Unit)
 
     fun getAllTasks(userId: String, callback: (List<TaskModel>?,Boolean,String) -> Unit)
+
+    fun markTaskAsComplete(taskId: String, isCompleted: Boolean, callback: (Boolean, String) -> Unit)
 }

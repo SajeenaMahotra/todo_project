@@ -11,6 +11,12 @@
         android:title="Add"/>
 
     <item
+        android:id="@+id/navCompletedTask"
+        android:icon="@drawable/baseline_checklist_24"
+        android:title="Add"/>
+
+
+    <item
         android:id="@+id/navProfile"
         android:icon="@drawable/baseline_perm_identity_24"
         android:title="Profile"/>

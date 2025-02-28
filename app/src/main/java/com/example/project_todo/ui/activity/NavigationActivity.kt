@@ -11,6 +11,7 @@ import androidx.fragment.app.FragmentTransaction
 import com.example.project_todo.R
 import com.example.project_todo.databinding.ActivityNavigationBinding
 import com.example.project_todo.ui.fragment.AddTaskFragment
+import com.example.project_todo.ui.fragment.CompletedTaskFragment
 import com.example.project_todo.ui.fragment.HomeFragment
 import com.example.project_todo.ui.fragment.ProfileFragment
 
@@ -37,8 +38,9 @@ class NavigationActivity : AppCompatActivity() {
             when(menu.itemId){
                 R.id.navHome -> replaceFragment(HomeFragment())
                     R.id.navAddTask -> replaceFragment(AddTaskFragment())
-                        R.id.navProfile -> replaceFragment(ProfileFragment())
-                            else ->{}
+                        R.id.navCompletedTask -> replaceFragment(CompletedTaskFragment())
+                            R.id.navProfile -> replaceFragment(ProfileFragment())
+                                else ->{}
             }
             true
         }

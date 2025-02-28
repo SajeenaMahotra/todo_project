@@ -4,5 +4,6 @@ data class TaskModel(
     var taskId: String = "",
     var taskName: String = "",
     var date: String = "",
-    val userId: String = ""
+    val userId: String = "",
+    var completed: Boolean = false
 )

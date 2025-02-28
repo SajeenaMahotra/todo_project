@@ -49,10 +49,7 @@ class TaskViewModel(private val repo: TaskRepository) : ViewModel() {
 
     }
 
-
-
-
-
-
-
+    fun markTaskAsComplete(taskId: String, isCompleted: Boolean, callback: (Boolean, String) -> Unit){
+        repo.markTaskAsComplete(taskId,isCompleted,callback)
+    }
 }

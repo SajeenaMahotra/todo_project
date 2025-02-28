@@ -47,7 +47,7 @@ class HomeFragment : Fragment() {
         val taskRepo = TaskRepositoryImpl()
         taskViewModel = TaskViewModel(taskRepo)
 
-        adapter = TaskAdapter(requireContext(), arrayListOf())
+        adapter = TaskAdapter(requireContext(), arrayListOf(),taskViewModel)
         binding.recyclerViewTasks.layoutManager = LinearLayoutManager(requireContext())
         binding.recyclerViewTasks.adapter = adapter
 
@@ -57,13 +57,13 @@ class HomeFragment : Fragment() {
         userId?.let { uid ->
             taskViewModel.getAllTasks(uid) { taskList, success, message ->
                 if (success) {
-                    adapter.updateData(taskList ?: emptyList()) // Update RecyclerView
+                    val filteredTasks = taskList?.filter { !it.completed } ?: emptyList()
+                    adapter.updateData(filteredTasks) // Update RecyclerView
                 } else {
                     Toast.makeText(requireContext(), message, Toast.LENGTH_SHORT).show()
                 }
             }
         }
-
         var currentUser = userViewModel.getCurrentUser()
         currentUser.let {
             userViewModel.getUserFromDatabase(it?.uid.toString())

@@ -90,5 +90,20 @@ class TaskRepositoryImpl:TaskRepository {
             })
     }
 
+    override fun markTaskAsComplete(
+        taskId: String,
+        isCompleted: Boolean,
+        callback: (Boolean, String) -> Unit
+    ) {
+        val updateData = mapOf("completed" to isCompleted)
+        ref.child(taskId).updateChildren(updateData).addOnCompleteListener {
+            if (it.isSuccessful) {
+                callback(true, "Task status updated successfully")
+            } else {
+                callback(false, it.exception?.message ?: "Error updating task status")
+            }
+        }
+    }
+
 
 }
